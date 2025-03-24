@@ -66,6 +66,11 @@ sudo systemctl daemon-reload
 sudo systemctl enable Internet-Radio
 sudo systemctl start Internet-Radio
 ```
+Adding login permissions:
+```console
+sudo chmod 666 /var/log/Internet-Radio.log
+sudo chmod 666 /var/log/Internet-Radio_error.log
+```
 Service management:
 ```console
 sudo systemctl start Internet-Radio # Starting the service
