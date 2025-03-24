@@ -14,6 +14,11 @@ sudo git clone https://github.com/ondrahladik/Internet-Radio.git
 sudo pip3 install -r requirements.txt
 cd Internet-Radio
 ```
+After installation, you will need to enable  I²C.
+```console
+sudo raspi-config
+```
+Interface Options -> I2C -> YES 
 
 ## Config
 
