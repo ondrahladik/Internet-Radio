@@ -4,6 +4,7 @@ from unidecode import unidecode
 from config import vlc_instance, streams, radio_names, now_playing_api, default_volume, session
 from RPLCD.i2c import CharLCD
 import RPi.GPIO as GPIO
+import sys
 
 # Inicializace přehrávače a LCD displeje
 player = vlc_instance.media_player_new()
@@ -89,7 +90,11 @@ def update_now_playing():
 thread = threading.Thread(target=update_now_playing, daemon=True)
 thread.start()
 
-print("Program spuštěn.")  # Výpis při spuštění programu
+print("Program spuštěn.") 
+
+if not sys.stdout.isatty():  # Skript je spuštěn jako služba
+    time.sleep(20)
+
 play_stream()
 
 # Piny pro tlačítka
@@ -131,10 +136,10 @@ def change_stream(channel):
 def change_volume(channel):
     global current_volume
     if channel == up_button:
-        current_volume = min(player.audio_get_volume() + 10, 100)
+        current_volume = min(current_volume + 10, 100)  
     elif channel == down_button:
-        current_volume = max(player.audio_get_volume() - 10, 0)
-    player.audio_set_volume(current_volume)
+        current_volume = max(current_volume - 10, 0)  
+    player.audio_set_volume(current_volume) 
     display_info()  
 
 # Přerušení (interrupts) – reagují na stisk tlačítka
@@ -148,7 +153,7 @@ try:
     while True:
         time.sleep(1)  # Hlavní smyčka
 except KeyboardInterrupt:
-    print("\nUkončuji program.")  # Výpis při ukončení programu
+    print("\nUkončuji program.")  
     running = False
     update_event.set()
     player.stop()
