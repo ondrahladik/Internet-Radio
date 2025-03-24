@@ -39,7 +39,20 @@ sudo nano /etc/systemd/system/Internet-Radio.service
 ```
 Put these lines in the file:
 ```console
+[Unit]
+Description=Internet-Radio
+After=network.target
+Wants=network-online.target
 
+[Service]
+ExecStart=/usr/bin/python3 /opt/Internet-Radio/main.py
+WorkingDirectory=/opt/Internet-Radio
+StandardOutput=append:/var/log/Internet-Radio.log
+StandardError=append:/var/log/Internet-Radio_error.log
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
 ```
 Starting the service:
 ```console
