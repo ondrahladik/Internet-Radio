@@ -20,6 +20,12 @@ sudo raspi-config
 ```
 Interface Options -> I2C -> YES 
 
+You can check whether your I²C LCD is connected and installed correctly using:
+```console
+sudo i2cdetect -y 1
+```
+The output should contain the address of your device.
+
 ## Config
 
 ```console
