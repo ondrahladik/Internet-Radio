@@ -1,0 +1,4 @@
+requests
+python-vlc
+unidecode
+RPLCD
