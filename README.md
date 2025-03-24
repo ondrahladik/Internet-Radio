@@ -1,5 +1,7 @@
 # Internet-Radio
 
+The following radios are currently added to the configuration: Kiss rádio, Evropa 2, Rock rádio, Rádio Beat, Dance rádio, Fajn Rádio, Hitrádio Černá Hora, Hitrádio Osmdesátka, ČRo Radiožurnál, Frekvence 1 and as a bonus there is also a stream from radio traffic at BRNO airport.
+
 ## Install
 
 ```console
