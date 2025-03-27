@@ -1,6 +1,9 @@
 # Internet-Radio
+A simple internet radio for your Raspberry Pi. The entire radio assembly is of course made up of the RPi microcomputer (the program is not demanding, the recording version should be enough for it to run). You also need a 2x20 line LCD display (HD44780) with an I2C converter. Finally, you need 4 buttons.
 
 The following radios are currently added to the configuration: <b>Kiss rádio</b>, <b>Evropa 2</b>, <b>Rock rádio</b>, <b>Rádio Beat</b>, <b>Dance rádio</b>, <b>Fajn Rádio</b>, <b>Hitrádio Černá Hora</b>, <b>Hitrádio Osmdesátka</b>, <b>ČRo Radiožurnál</b>, <b>Frekvence 1</b> and as a bonus there is also a stream from radio traffic at BRNO airport.
+
+The above radios are of course fully configurable and can be changed to your own internet streams. The full configuration guide is in the [Config](#config) section.
 
 ## Install
 
@@ -31,7 +34,9 @@ The output should contain the address of your device.
 sudo nano config.py
 ```
 The program is configured using the config.py file where you can customize some settings, but this is not necessary for functionality after installation.  
+```python
 
+```
 Before you start configuring the service, you can check if you have all the packages and dependencies installed by running the program manually.
 ```console
 sudo python3 main.py
