@@ -1,11 +1,10 @@
 import vlc
 import requests
-import os
 
-# Inicializace VLC s nižší cache pro rychlejší start
+# Initialize VLC with lower cache for faster startup
 vlc_instance = vlc.Instance("--no-xlib", "--network-caching=300", "--aout=alsa")
 
-# Seznam streamů a jejich názvů
+# List of streams
 streams = [
     'http://icecast1.play.cz/kiss128.mp3', # Kiss Radio
     'https://ice.actve.net/fm-evropa2-128', # Evropa 2
@@ -20,6 +19,7 @@ streams = [
     'https://rs.slapnet.cz/brno-mix3' # Letiste BRNO
 ]
 
+# Station names
 radio_names = [
     'Kiss radio',
     'Evropa 2',
@@ -34,7 +34,8 @@ radio_names = [
     'Letiste BRNO'
 ]
 
-# URL API pro získání aktuálně hrající skladby
+# API URL to get the currently playing song 
+# (Station name, API URL in json, Key for the performer, Key for song title)
 now_playing_api = {
     'Kiss radio': ('https://radia.cz/api/v1/radio/radio-kiss/songs/now.json', 'interpret', 'song'),
     'Evropa 2': ('https://rds.actve.net/v1/metadata/channel/evropa2', 'artist', 'title'),
@@ -49,8 +50,14 @@ now_playing_api = {
     'Letiste BRNO': ('https://cs.ok1kky.cz/api/turany/info.json', 'info1', 'info2')
 }
 
-# Výchozí hlasitost
+# Default volume
 default_volume = 80
 
-# HTTP session pro optimalizaci requestů
+# Pins for buttons
+left_button = 17
+right_button = 27
+up_button = 22
+down_button = 23
+
+# HTTP session for request optimization
 session = requests.Session()

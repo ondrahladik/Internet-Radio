@@ -1,12 +1,12 @@
 import time
 import threading
 from unidecode import unidecode
-from config import vlc_instance, streams, radio_names, now_playing_api, default_volume, session
+from config import vlc_instance, streams, radio_names, now_playing_api, default_volume, left_button, right_button, up_button, down_button, session
 from RPLCD.i2c import CharLCD
 import RPi.GPIO as GPIO
 import sys
 
-# Inicializace přehrávače a LCD displeje
+# Initializing the player and LCD display
 player = vlc_instance.media_player_new()
 current_stream_index = 0
 running = True
@@ -14,25 +14,25 @@ update_event = threading.Event()
 last_song_info = ""
 current_volume = default_volume
 
-# Inicializace GPIO
+# GPIO initialization
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-# Inicializace LCD displeje
+# Initializing the LCD display
 lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1, cols=20, rows=2, dotsize=8)
 lcd.clear()
 
 def display_info(song_info=""):
-    """Zobrazí aktuální stanici, skladbu a hlasitost na LCD."""
+    """Displays the current station, song and volume on the LCD."""
     if song_info:
         lcd.clear()
-        lcd.write_string(f"{radio_names[current_stream_index][:16]}")  # Zobrazí stanici (max 16 znaků)
+        lcd.write_string(f"{radio_names[current_stream_index][:16]}")  # Displays the station (max 16 characters)
         lcd.cursor_pos = (1, 0)
-        lcd.write_string(song_info[:20] if song_info else "")  # Zobrazí první část skladby (max 20 znaků)
+        lcd.write_string(song_info[:20] if song_info else "")  # Displays the first part of the song (max 20 characters)
     
     lcd.cursor_pos = (0, 16)
-    volume_display = f"{current_volume}%".rjust(4)  # Hlasitost zarovnaná na 4 znaky
-    lcd.write_string(volume_display)  # Zobrazí hlasitost
+    volume_display = f"{current_volume}%".rjust(4)  # Volume aligned to 4 characters
+    lcd.write_string(volume_display)  # Displays the volume
 
 def play_stream():
     global last_song_info
@@ -53,7 +53,7 @@ def play_stream():
     get_now_playing()
 
 def get_now_playing():
-    """Získá informace o aktuálně hrající skladbě"""
+    """Gets information about the currently playing song."""
     global last_song_info
 
     radio_name = radio_names[current_stream_index]
@@ -65,8 +65,8 @@ def get_now_playing():
             response.raise_for_status()
 
             now_playing_data = response.json()
-            artist = now_playing_data.get(artist_key, "Neznámý interpret")
-            title = now_playing_data.get(title_key, "Neznámá skladba")
+            artist = now_playing_data.get(artist_key, "Unknown")
+            title = now_playing_data.get(title_key, "Unknown")
 
             artist_clean = unidecode(artist)
             title_clean = unidecode(title)
@@ -77,39 +77,33 @@ def get_now_playing():
                 last_song_info = new_song_info
                 display_info(new_song_info)
         except Exception as e:
-            print(f"Chyba při získávání dat: {e}")  # Výpis chyby pro ladění
+            print(f"Error while retrieving data: {e}")  
 
 def update_now_playing():
-    """Pravidelně aktualizuje informace o skladbě, ale až po 15s od změny stanice."""
+    """Updating song information."""
     while running:
         update_event.wait(15)  
         update_event.clear()
         get_now_playing()
 
-# Spuštění vlákna pro aktualizaci názvu skladby
+# Start thread to update song title
 thread = threading.Thread(target=update_now_playing, daemon=True)
 thread.start()
 
-print("Program spuštěn.") 
+print("Program started.") 
 
-if not sys.stdout.isatty():  # Skript je spuštěn jako služba
+if not sys.stdout.isatty():  # The script is run as a service
     time.sleep(20)
 
 play_stream()
 
-# Piny pro tlačítka
-left_button = 17
-right_button = 27
-up_button = 22
-down_button = 23
-
-# Nastavení pinů jako vstupy s pull-up rezistory
+# Setting pins as inputs with pull-up resistors
 GPIO.setup(left_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(right_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(up_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(down_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-# Uchovává čas posledního stisku tlačítek
+# Stores the time of the last key press
 last_press_time = {17: 0, 27: 0, 22: 0, 23: 0} 
 
 lock = threading.Lock() 
@@ -142,7 +136,7 @@ def change_volume(channel):
     player.audio_set_volume(current_volume) 
     display_info()  
 
-# Přerušení (interrupts) – reagují na stisk tlačítka
+# Interrupts – respond to button presses
 GPIO.add_event_detect(left_button, GPIO.FALLING, callback=change_stream, bouncetime=300)
 GPIO.add_event_detect(right_button, GPIO.FALLING, callback=change_stream, bouncetime=300)
 GPIO.add_event_detect(up_button, GPIO.FALLING, callback=change_volume, bouncetime=300)
@@ -151,9 +145,9 @@ GPIO.add_event_detect(down_button, GPIO.FALLING, callback=change_volume, bouncet
 
 try:
     while True:
-        time.sleep(1)  # Hlavní smyčka
+        time.sleep(1)  # Main loop
 except KeyboardInterrupt:
-    print("\nUkončuji program.")  
+    print("\nProgram ended.")  
     running = False
     update_event.set()
     player.stop()
