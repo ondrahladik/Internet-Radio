@@ -33,10 +33,10 @@ The output should contain the address of your device.
 ```console
 sudo nano config.py
 ```
-The program is configured using the config.py file where you can customize some settings, but this is not necessary for functionality after installation.  
-```python
+The program is configured using the config.py file where you can customize some settings, but this is not necessary for functionality after installation.   
 
-```
+A complete description of the configuration is on the [Wiki](https://github.com/ondrahladik/Internet-Radio/wiki) page. 
+
 Before you start configuring the service, you can check if you have all the packages and dependencies installed by running the program manually.
 ```console
 sudo python3 main.py
