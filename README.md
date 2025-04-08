@@ -13,8 +13,8 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install git vlc python3-pip python3-smbus -y
 sudo apt install i2c-tools libvlc-dev libvlccore-dev -y
 sudo git clone https://github.com/ondrahladik/Internet-Radio.git
-sudo pip3 install -r requirements.txt
 cd Internet-Radio
+sudo pip3 install -r requirements.txt
 ```
 After installation, you will need to enable  I²C.
 ```console
@@ -83,3 +83,10 @@ sudo systemctl stop Internet-Radio # Stop the service
 sudo systemctl status Internet-Radio # Service status
 tail -f /var/log/Internet-Radio.log # Tracking logs
 ```
+
+## Photo sample of my radio
+I also included my 3D printed files among the files. But since I used quite atypical buttons, I also included `.step` files. And you can customize the box if necessary.
+
+![image1](Image/img1.jpg)
+![image2](Image/img2.jpg)
+![image3](Image/img3.jpg)
